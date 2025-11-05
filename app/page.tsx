@@ -2,9 +2,7 @@ import { TodoList } from "@/components/todo-list";
 
 export default function Home() {
   return (
-    <main className="min-h-screen py-12 px-4 bg-background">
-      <TodoList />
-    </main>
+    <TodoList />
   );
 }
 
