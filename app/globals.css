@@ -4,48 +4,48 @@
 
 @layer base {
   :root {
-    --background: 43 79% 95%;        /* #fef6e4 - warm cream */
-    --foreground: 216 97% 17%;       /* #001858 - deep navy */
-    --card: 0 0% 100%;               /* #fffffe - white cards */
-    --card-foreground: 216 97% 17%;  /* #001858 - deep navy */
-    --popover: 0 0% 100%;
-    --popover-foreground: 216 97% 17%;
-    --primary: 336 89% 73%;          /* #f582ae - vibrant pink */
-    --primary-foreground: 216 97% 17%; /* #001858 - deep navy */
-    --secondary: 190 65% 70%;        /* #8bd3dd - light cyan */
-    --secondary-foreground: 216 97% 17%;
-    --muted: 26 67% 86%;             /* #f3d2c1 - soft peach */
-    --muted-foreground: 219 59% 25%; /* #172c66 - medium blue */
-    --accent: 336 89% 73%;           /* #f582ae - vibrant pink */
-    --accent-foreground: 216 97% 17%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 26 67% 86%;            /* #f3d2c1 - soft peach border */
-    --input: 26 67% 86%;
-    --ring: 336 89% 73%;             /* #f582ae - pink ring */
+    --background: 179 100% 14%;      /* #004643 - deep teal */
+    --foreground: 240 100% 99%;      /* #fffffe - white */
+    --card: 300 10% 90%;             /* #e8e4e6 - light grey cards */
+    --card-foreground: 178 100% 6%;  /* #001e1d - very dark teal */
+    --popover: 300 10% 90%;
+    --popover-foreground: 178 100% 6%;
+    --primary: 39 92% 68%;           /* #f9bc60 - gold/yellow */
+    --primary-foreground: 178 100% 6%; /* #001e1d - very dark teal */
+    --secondary: 156 33% 75%;        /* #abd1c6 - mint green */
+    --secondary-foreground: 178 100% 6%;
+    --muted: 156 33% 75%;            /* #abd1c6 - mint green */
+    --muted-foreground: 179 100% 18%; /* darker teal */
+    --accent: 39 92% 68%;            /* #f9bc60 - gold/yellow */
+    --accent-foreground: 178 100% 6%;
+    --destructive: 0 67% 63%;        /* #e16162 - coral red */
+    --destructive-foreground: 240 100% 99%;
+    --border: 156 33% 75%;           /* #abd1c6 - mint green border */
+    --input: 156 33% 75%;
+    --ring: 39 92% 68%;              /* #f9bc60 - gold ring */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 216 97% 17%;       /* #001858 - deep navy background */
-    --foreground: 43 79% 95%;        /* #fef6e4 - warm cream text */
-    --card: 219 59% 25%;             /* #172c66 - medium blue cards */
-    --card-foreground: 43 79% 95%;
-    --popover: 219 59% 25%;
-    --popover-foreground: 43 79% 95%;
-    --primary: 336 89% 73%;          /* #f582ae - vibrant pink */
-    --primary-foreground: 216 97% 17%;
-    --secondary: 190 65% 70%;        /* #8bd3dd - light cyan */
-    --secondary-foreground: 216 97% 17%;
-    --muted: 26 67% 86%;             /* #f3d2c1 - soft peach */
-    --muted-foreground: 43 79% 95%;
-    --accent: 190 65% 70%;
-    --accent-foreground: 216 97% 17%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 43 79% 95%;
-    --border: 219 59% 35%;
-    --input: 219 59% 35%;
-    --ring: 336 89% 73%;
+    --background: 178 100% 6%;       /* #001e1d - very dark teal */
+    --foreground: 156 33% 75%;       /* #abd1c6 - mint green text */
+    --card: 179 100% 14%;            /* #004643 - deep teal cards */
+    --card-foreground: 240 100% 99%;
+    --popover: 179 100% 14%;
+    --popover-foreground: 240 100% 99%;
+    --primary: 39 92% 68%;           /* #f9bc60 - gold/yellow */
+    --primary-foreground: 178 100% 6%;
+    --secondary: 156 33% 75%;        /* #abd1c6 - mint green */
+    --secondary-foreground: 178 100% 6%;
+    --muted: 179 100% 14%;
+    --muted-foreground: 156 33% 75%;
+    --accent: 39 92% 68%;
+    --accent-foreground: 178 100% 6%;
+    --destructive: 0 67% 63%;        /* #e16162 - coral red */
+    --destructive-foreground: 240 100% 99%;
+    --border: 179 100% 20%;
+    --input: 179 100% 20%;
+    --ring: 39 92% 68%;
   }
 }
 
