@@ -41,18 +41,28 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit, onSelect }: TodoIte
   };
 
   return (
-    <div className="group flex items-center gap-3 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-200 animate-fade-in">
-      <Checkbox
-        checked={todo.selected || false}
-        onChange={() => onSelect(todo.id)}
-      />
+    <div 
+      className={cn(
+        "group flex items-center gap-3 p-4 border rounded-lg hover:shadow-md transition-all duration-200 animate-fade-in cursor-pointer",
+        todo.selected 
+          ? "bg-primary/10 border-primary" 
+          : "bg-card border-border"
+      )}
+      onClick={() => onSelect(todo.id)}
+    >
       <Checkbox
         checked={todo.completed}
-        onChange={() => onToggle(todo.id)}
+        onChange={(e) => {
+          e.stopPropagation();
+          onToggle(todo.id);
+        }}
       />
       
       {isEditing ? (
-        <div className="flex-1 flex items-center gap-2">
+        <div 
+          className="flex-1 flex items-center gap-2"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Input
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
@@ -90,7 +100,10 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit, onSelect }: TodoIte
             {todo.text}
           </span>
           
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div 
+            className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Button
               size="icon"
               variant="ghost"
