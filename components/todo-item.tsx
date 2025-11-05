@@ -13,10 +13,9 @@ interface TodoItemProps {
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit: (id: string, text: string) => void;
-  onSelect: (id: string) => void;
 }
 
-export function TodoItem({ todo, onToggle, onDelete, onEdit, onSelect }: TodoItemProps) {
+export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
 
@@ -41,28 +40,15 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit, onSelect }: TodoIte
   };
 
   return (
-    <div 
-      className={cn(
-        "group flex items-center gap-3 p-4 border rounded-lg hover:shadow-md transition-all duration-200 animate-fade-in cursor-pointer",
-        todo.selected 
-          ? "bg-primary/10 border-primary" 
-          : "bg-card border-border"
-      )}
-      onClick={() => onSelect(todo.id)}
-    >
+    <div className="group flex items-center gap-3 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-200 animate-fade-in">
       <Checkbox
         checked={todo.completed}
-        onChange={(e) => {
-          e.stopPropagation();
-          onToggle(todo.id);
-        }}
+        onChange={() => onToggle(todo.id)}
+        id={`todo-${todo.id}`}
       />
       
       {isEditing ? (
-        <div 
-          className="flex-1 flex items-center gap-2"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="flex-1 flex items-center gap-2">
           <Input
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
@@ -89,21 +75,19 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit, onSelect }: TodoIte
         </div>
       ) : (
         <>
-          <span
+          <label
+            htmlFor={`todo-${todo.id}`}
             className={cn(
-              "flex-1 select-none text-sm transition-all",
+              "flex-1 cursor-pointer select-none text-sm transition-all",
               todo.completed
                 ? "line-through text-muted-foreground"
                 : "text-foreground"
             )}
           >
             {todo.text}
-          </span>
+          </label>
           
-          <div 
-            className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button
               size="icon"
               variant="ghost"
