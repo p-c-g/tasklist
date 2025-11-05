@@ -99,15 +99,17 @@ export function TodoList() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between gap-4 flex-wrap" role="toolbar" aria-label="Task filters">
+        <div className="flex gap-2" role="group" aria-label="Filter tasks">
           <Button
             variant={filter === "all" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("all")}
             className="gap-2"
+            aria-pressed={filter === "all"}
+            aria-label={`Show all tasks (${todos.length})`}
           >
-            <ListTodo className="h-4 w-4" />
+            <ListTodo className="h-4 w-4" aria-hidden="true" />
             All ({todos.length})
           </Button>
           <Button
@@ -115,8 +117,10 @@ export function TodoList() {
             size="sm"
             onClick={() => setFilter("active")}
             className="gap-2"
+            aria-pressed={filter === "active"}
+            aria-label={`Show active tasks (${activeTodosCount})`}
           >
-            <Circle className="h-4 w-4" />
+            <Circle className="h-4 w-4" aria-hidden="true" />
             Active ({activeTodosCount})
           </Button>
           <Button
@@ -124,8 +128,10 @@ export function TodoList() {
             size="sm"
             onClick={() => setFilter("completed")}
             className="gap-2"
+            aria-pressed={filter === "completed"}
+            aria-label={`Show completed tasks (${completedTodosCount})`}
           >
-            <CheckCircle2 className="h-4 w-4" />
+            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
             Completed ({completedTodosCount})
           </Button>
         </div>
@@ -136,18 +142,19 @@ export function TodoList() {
             size="sm"
             onClick={clearCompleted}
             className="gap-2"
+            aria-label={`Clear ${completedTodosCount} completed ${completedTodosCount === 1 ? 'task' : 'tasks'}`}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
             Clear Completed
           </Button>
         )}
       </div>
 
       {/* Todo List */}
-      <div className="space-y-2">
+      <div className="space-y-2" role="list" aria-label={`${filter === "all" ? "All" : filter === "active" ? "Active" : "Completed"} tasks`}>
         {filteredTodos.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            <div className="text-6xl mb-4">📝</div>
+          <div className="text-center py-12 text-muted-foreground" role="status">
+            <div className="text-6xl mb-4" aria-hidden="true">📝</div>
             <p className="text-lg">
               {filter === "completed"
                 ? "No completed tasks yet"
@@ -158,20 +165,21 @@ export function TodoList() {
           </div>
         ) : (
           filteredTodos.map((todo) => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggle={toggleTodo}
-              onDelete={deleteTodo}
-              onEdit={editTodo}
-            />
+            <div key={todo.id} role="listitem">
+              <TodoItem
+                todo={todo}
+                onToggle={toggleTodo}
+                onDelete={deleteTodo}
+                onEdit={editTodo}
+              />
+            </div>
           ))
         )}
       </div>
 
       {/* Footer Stats */}
       {todos.length > 0 && (
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground" role="status" aria-live="polite">
           {activeTodosCount === 0
             ? "🎉 All tasks completed!"
             : `${activeTodosCount} ${

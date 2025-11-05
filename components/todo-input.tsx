@@ -21,15 +21,17 @@ export function TodoInput({ onAdd }: TodoInputProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex gap-2" aria-label="Add new task">
       <Input
         type="text"
         placeholder="What needs to be done?"
         value={text}
         onChange={(e) => setText(e.target.value)}
         className="flex-1"
+        aria-label="New task description"
+        autoComplete="off"
       />
-      <Button type="submit" size="icon">
+      <Button type="submit" size="icon" aria-label="Add task" disabled={!text.trim()}>
         <Plus className="h-5 w-5" />
       </Button>
     </form>

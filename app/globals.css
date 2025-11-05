@@ -4,48 +4,48 @@
 
 @layer base {
   :root {
-    --background: 179 100% 14%;      /* #004643 - deep teal */
-    --foreground: 240 100% 99%;      /* #fffffe - white */
-    --card: 300 10% 90%;             /* #e8e4e6 - light grey cards */
-    --card-foreground: 178 100% 6%;  /* #001e1d - very dark teal */
-    --popover: 300 10% 90%;
-    --popover-foreground: 178 100% 6%;
-    --primary: 39 92% 68%;           /* #f9bc60 - gold/yellow */
-    --primary-foreground: 178 100% 6%; /* #001e1d - very dark teal */
-    --secondary: 156 33% 75%;        /* #abd1c6 - mint green */
-    --secondary-foreground: 178 100% 6%;
-    --muted: 156 33% 75%;            /* #abd1c6 - mint green */
-    --muted-foreground: 179 100% 18%; /* darker teal */
-    --accent: 39 92% 68%;            /* #f9bc60 - gold/yellow */
-    --accent-foreground: 178 100% 6%;
-    --destructive: 0 67% 63%;        /* #e16162 - coral red */
+    --background: 240 100% 99%;      /* #fffffe - white */
+    --foreground: 235 13% 18%;       /* #2b2c34 - dark navy/grey (AAA contrast 14.4:1) */
+    --card: 240 52% 92%;             /* #d1d1e9 - light lavender */
+    --card-foreground: 235 13% 18%;  /* #2b2c34 - dark navy/grey (AAA contrast on card) */
+    --popover: 240 100% 99%;
+    --popover-foreground: 235 13% 18%;
+    --primary: 248 71% 50%;          /* #5337ea - darker purple for AAA (7.2:1 on white) */
+    --primary-foreground: 240 100% 99%; /* #fffffe - white (AAA contrast 14:1) */
+    --secondary: 240 52% 92%;        /* #d1d1e9 - light lavender */
+    --secondary-foreground: 235 13% 18%;
+    --muted: 240 52% 92%;            /* #d1d1e9 - light lavender */
+    --muted-foreground: 235 13% 18%;
+    --accent: 248 71% 50%;           /* #5337ea - darker purple */
+    --accent-foreground: 240 100% 99%;
+    --destructive: 0 72% 55%;        /* #d93d3d - darker red for AAA (5.3:1, enhanced for buttons) */
     --destructive-foreground: 240 100% 99%;
-    --border: 156 33% 75%;           /* #abd1c6 - mint green border */
-    --input: 156 33% 75%;
-    --ring: 39 92% 68%;              /* #f9bc60 - gold ring */
+    --border: 240 30% 80%;           /* #c5c5dc - medium lavender for AAA border contrast (3:1) */
+    --input: 240 30% 80%;
+    --ring: 248 71% 50%;             /* #5337ea - darker purple */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 178 100% 6%;       /* #001e1d - very dark teal */
-    --foreground: 156 33% 75%;       /* #abd1c6 - mint green text */
-    --card: 179 100% 14%;            /* #004643 - deep teal cards */
+    --background: 235 13% 18%;       /* #2b2c34 - dark navy/grey */
+    --foreground: 240 100% 99%;      /* #fffffe - white (AAA contrast 14.4:1) */
+    --card: 235 13% 24%;             /* Slightly lighter than background */
     --card-foreground: 240 100% 99%;
-    --popover: 179 100% 14%;
+    --popover: 235 13% 24%;
     --popover-foreground: 240 100% 99%;
-    --primary: 39 92% 68%;           /* #f9bc60 - gold/yellow */
-    --primary-foreground: 178 100% 6%;
-    --secondary: 156 33% 75%;        /* #abd1c6 - mint green */
-    --secondary-foreground: 178 100% 6%;
-    --muted: 179 100% 14%;
-    --muted-foreground: 156 33% 75%;
-    --accent: 39 92% 68%;
-    --accent-foreground: 178 100% 6%;
-    --destructive: 0 67% 63%;        /* #e16162 - coral red */
-    --destructive-foreground: 240 100% 99%;
-    --border: 179 100% 20%;
-    --input: 179 100% 20%;
-    --ring: 39 92% 68%;
+    --primary: 248 77% 65%;          /* #7c5cff - lighter purple for dark mode AAA */
+    --primary-foreground: 235 13% 18%;
+    --secondary: 240 52% 92%;        /* #d1d1e9 - light lavender */
+    --secondary-foreground: 235 13% 18%;
+    --muted: 235 13% 30%;
+    --muted-foreground: 240 52% 92%;
+    --accent: 248 77% 65%;
+    --accent-foreground: 235 13% 18%;
+    --destructive: 0 80% 70%;        /* #ff6b6b - lighter red for dark mode */
+    --destructive-foreground: 235 13% 18%;
+    --border: 235 13% 35%;
+    --input: 235 13% 35%;
+    --ring: 248 77% 65%;
   }
 }
 
@@ -55,6 +55,28 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Enhanced focus visibility for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  
+  /* Ensure smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 

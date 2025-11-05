@@ -60,7 +60,8 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
             size="icon"
             variant="ghost"
             onClick={handleSave}
-            className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+            className="h-8 w-8 text-primary hover:text-primary/90 hover:bg-primary/10"
+            aria-label="Save changes"
           >
             <Check className="h-4 w-4" />
           </Button>
@@ -68,7 +69,8 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
             size="icon"
             variant="ghost"
             onClick={handleCancel}
-            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="h-8 w-8 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+            aria-label="Cancel editing"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -92,7 +94,8 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
               size="icon"
               variant="ghost"
               onClick={() => setIsEditing(true)}
-              className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+              className="h-8 w-8 text-primary hover:text-primary/90 hover:bg-primary/10"
+              aria-label="Edit task"
             >
               <Edit2 className="h-4 w-4" />
             </Button>
@@ -100,7 +103,8 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
               size="icon"
               variant="ghost"
               onClick={() => onDelete(todo.id)}
-              className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="h-8 w-8 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+              aria-label="Delete task"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
