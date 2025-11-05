@@ -8,6 +8,7 @@ import { Sidebar } from "./sidebar";
 import { Button } from "./ui/button";
 import { suggestEmoji } from "@/lib/emoji-suggester";
 import { triggerConfetti, triggerCelebration } from "@/lib/confetti";
+import { todosService } from "@/lib/todos-service";
 
 const STORAGE_KEY = "todos";
 
@@ -15,50 +16,92 @@ export function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<FilterType>("all");
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [useSupabase, setUseSupabase] = useState(false);
 
-  // Load todos from localStorage on mount
+  // Load todos on mount
   useEffect(() => {
     setMounted(true);
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        setTodos(JSON.parse(stored));
-      } catch (e) {
-        console.error("Failed to parse todos from localStorage", e);
-      }
-    }
+    loadTodos();
   }, []);
 
-  // Save todos to localStorage whenever they change
+  const loadTodos = async () => {
+    setLoading(true);
+    
+    // Check if Supabase is configured
+    const isSupabaseConfigured = todosService.isConfigured();
+    setUseSupabase(isSupabaseConfigured);
+
+    if (isSupabaseConfigured) {
+      // Use Supabase
+      const fetchedTodos = await todosService.fetchTodos();
+      setTodos(fetchedTodos);
+    } else {
+      // Fallback to localStorage
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          setTodos(JSON.parse(stored));
+        } catch (e) {
+          console.error("Failed to parse todos from localStorage", e);
+        }
+      }
+    }
+    
+    setLoading(false);
+  };
+
+  // Save to localStorage when not using Supabase
   useEffect(() => {
-    if (mounted) {
+    if (mounted && !useSupabase) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
     }
-  }, [todos, mounted]);
+  }, [todos, mounted, useSupabase]);
 
-  const addTodo = (text: string) => {
+  const addTodo = async (text: string) => {
     const emoji = suggestEmoji(text);
-    const newTodo: Todo = {
+    const tempTodo: Todo = {
       id: Date.now().toString(),
       text,
       completed: false,
       emoji,
       createdAt: Date.now(),
     };
-    setTodos([newTodo, ...todos]);
+
+    if (useSupabase) {
+      // Optimistic update
+      setTodos([tempTodo, ...todos]);
+      
+      // Save to Supabase
+      const savedTodo = await todosService.addTodo(tempTodo);
+      if (savedTodo) {
+        // Replace temp todo with saved todo
+        setTodos(prev => prev.map(t => t.id === tempTodo.id ? savedTodo : t));
+      } else {
+        // Rollback on error
+        setTodos(prev => prev.filter(t => t.id !== tempTodo.id));
+        console.error('Failed to save todo');
+      }
+    } else {
+      // localStorage fallback
+      setTodos([tempTodo, ...todos]);
+    }
   };
 
-  const toggleTodo = (id: string) => {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        const newCompleted = !todo.completed;
-        return { ...todo, completed: newCompleted };
-      }
-      return todo;
-    });
+  const toggleTodo = async (id: string) => {
+    const todo = todos.find(t => t.id === id);
+    if (!todo) return;
+
+    const newCompleted = !todo.completed;
+    
+    // Optimistic update
+    const updatedTodos = todos.map((t) =>
+      t.id === id ? { ...t, completed: newCompleted } : t
+    );
+    setTodos(updatedTodos);
     
     // Check if this completion resulted in all tasks being done
-    const completingTask = todos.find(t => t.id === id && !t.completed);
+    const completingTask = !todo.completed;
     const allComplete = completingTask && updatedTodos.every(t => t.completed);
     
     if (completingTask) {
@@ -72,22 +115,68 @@ export function TodoList() {
         }, 300);
       }
     }
-    
-    setTodos(updatedTodos);
+
+    // Update in Supabase if configured
+    if (useSupabase) {
+      const success = await todosService.updateTodo(id, { completed: newCompleted });
+      if (!success) {
+        // Rollback on error
+        setTodos(todos);
+        console.error('Failed to update todo');
+      }
+    }
   };
 
-  const deleteTodo = (id: string) => {
+  const deleteTodo = async (id: string) => {
+    // Optimistic update
+    const previousTodos = todos;
     setTodos(todos.filter((todo) => todo.id !== id));
+
+    // Delete from Supabase if configured
+    if (useSupabase) {
+      const success = await todosService.deleteTodo(id);
+      if (!success) {
+        // Rollback on error
+        setTodos(previousTodos);
+        console.error('Failed to delete todo');
+      }
+    }
   };
 
-  const editTodo = (id: string, text: string) => {
+  const editTodo = async (id: string, text: string) => {
+    // Optimistic update
+    const previousTodos = todos;
     setTodos(
       todos.map((todo) => (todo.id === id ? { ...todo, text } : todo))
     );
+
+    // Update in Supabase if configured
+    if (useSupabase) {
+      const success = await todosService.updateTodo(id, { text });
+      if (!success) {
+        // Rollback on error
+        setTodos(previousTodos);
+        console.error('Failed to update todo');
+      }
+    }
   };
 
-  const clearCompleted = () => {
+  const clearCompleted = async () => {
+    const completedIds = todos.filter(t => t.completed).map(t => t.id);
+    
+    // Optimistic update
+    const previousTodos = todos;
     setTodos(todos.filter((todo) => !todo.completed));
+
+    // Delete from Supabase if configured
+    if (useSupabase) {
+      const success = await todosService.deleteTodos(completedIds);
+      if (!success) {
+        // Rollback on error
+        setTodos(previousTodos);
+        console.error('Failed to clear completed todos');
+      }
+    }
   };
 
   const filteredTodos = todos.filter((todo) => {
@@ -100,8 +189,15 @@ export function TodoList() {
   const completedTodosCount = todos.filter((todo) => todo.completed).length;
 
   // Prevent hydration mismatch
-  if (!mounted) {
-    return null;
+  if (!mounted || loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center space-y-4">
+          <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
+          <p className="text-muted-foreground">Loading your tasks...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -112,6 +208,7 @@ export function TodoList() {
         totalTasks={todos.length}
         activeTasks={activeTodosCount}
         completedTasks={completedTodosCount}
+        useSupabase={useSupabase}
       />
 
       {/* Main Content */}

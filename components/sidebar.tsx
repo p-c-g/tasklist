@@ -8,9 +8,10 @@ interface SidebarProps {
   totalTasks: number;
   activeTasks: number;
   completedTasks: number;
+  useSupabase?: boolean;
 }
 
-export function Sidebar({ onAddTodo, totalTasks, activeTasks, completedTasks }: SidebarProps) {
+export function Sidebar({ onAddTodo, totalTasks, activeTasks, completedTasks, useSupabase }: SidebarProps) {
   return (
     <aside 
       className="w-full lg:w-80 lg:min-h-screen bg-card border-b lg:border-b-0 lg:border-r border-border p-6 lg:sticky lg:top-0"
@@ -23,10 +24,18 @@ export function Sidebar({ onAddTodo, totalTasks, activeTasks, completedTasks }: 
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Plus className="h-6 w-6 text-primary" aria-hidden="true" />
             </div>
-            <div>
+            <div className="flex-1">
               <h2 className="text-2xl font-bold text-card-foreground">Add Task</h2>
               <p className="text-sm text-muted-foreground">Create a new todo</p>
             </div>
+          </div>
+          
+          {/* Connection Status */}
+          <div className="flex items-center gap-2 text-xs">
+            <div className={`h-2 w-2 rounded-full ${useSupabase ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+            <span className="text-muted-foreground">
+              {useSupabase ? 'Connected to Supabase' : 'Using local storage'}
+            </span>
           </div>
         </div>
 
