@@ -80,13 +80,22 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
           <label
             htmlFor={`todo-${todo.id}`}
             className={cn(
-              "flex-1 cursor-pointer select-none text-sm transition-all",
+              "flex-1 cursor-pointer select-none text-sm transition-all flex items-center gap-2",
               todo.completed
                 ? "line-through text-muted-foreground"
                 : "text-foreground"
             )}
           >
-            {todo.text}
+            {todo.emoji && (
+              <span 
+                className="text-xl flex-shrink-0 animate-bounce-in" 
+                aria-hidden="true"
+                style={{ animationDelay: '0.1s' }}
+              >
+                {todo.emoji}
+              </span>
+            )}
+            <span>{todo.text}</span>
           </label>
           
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

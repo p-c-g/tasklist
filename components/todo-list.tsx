@@ -6,6 +6,8 @@ import { Todo, FilterType } from "@/types/todo";
 import { TodoItem } from "./todo-item";
 import { Sidebar } from "./sidebar";
 import { Button } from "./ui/button";
+import { suggestEmoji } from "@/lib/emoji-suggester";
+import { triggerConfetti, triggerCelebration } from "@/lib/confetti";
 
 const STORAGE_KEY = "todos";
 
@@ -35,21 +37,43 @@ export function TodoList() {
   }, [todos, mounted]);
 
   const addTodo = (text: string) => {
+    const emoji = suggestEmoji(text);
     const newTodo: Todo = {
       id: Date.now().toString(),
       text,
       completed: false,
+      emoji,
       createdAt: Date.now(),
     };
     setTodos([newTodo, ...todos]);
   };
 
   const toggleTodo = (id: string) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        const newCompleted = !todo.completed;
+        return { ...todo, completed: newCompleted };
+      }
+      return todo;
+    });
+    
+    // Check if this completion resulted in all tasks being done
+    const completingTask = todos.find(t => t.id === id && !t.completed);
+    const allComplete = completingTask && updatedTodos.every(t => t.completed);
+    
+    if (completingTask) {
+      // Trigger confetti when completing a task
+      triggerConfetti();
+      
+      // Special celebration when all tasks are complete
+      if (allComplete && updatedTodos.length > 0) {
+        setTimeout(() => {
+          triggerCelebration();
+        }, 300);
+      }
+    }
+    
+    setTodos(updatedTodos);
   };
 
   const deleteTodo = (id: string) => {

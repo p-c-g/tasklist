@@ -70,7 +70,11 @@ export function Sidebar({ onAddTodo, totalTasks, activeTasks, completedTasks }: 
             </div>
             <div className="h-2 bg-background rounded-full overflow-hidden">
               <div
-                className="h-full bg-primary transition-all duration-300"
+                className={`h-full transition-all duration-300 ${
+                  completedTasks === totalTasks 
+                    ? 'bg-gradient-to-r from-primary via-accent to-primary animate-pulse-glow' 
+                    : 'bg-primary'
+                }`}
                 style={{ width: `${(completedTasks / totalTasks) * 100}%` }}
                 role="progressbar"
                 aria-valuenow={(completedTasks / totalTasks) * 100}
@@ -79,6 +83,14 @@ export function Sidebar({ onAddTodo, totalTasks, activeTasks, completedTasks }: 
                 aria-label={`${Math.round((completedTasks / totalTasks) * 100)}% of tasks completed`}
               />
             </div>
+            {completedTasks === totalTasks && (
+              <div className="text-center py-2 animate-bounce-in">
+                <span className="text-2xl">🎉</span>
+                <p className="text-xs font-semibold text-primary mt-1">
+                  All tasks completed!
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
