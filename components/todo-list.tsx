@@ -52,6 +52,14 @@ export function TodoList() {
     );
   };
 
+  const selectTodo = (id: string) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, selected: !todo.selected } : todo
+      )
+    );
+  };
+
   const deleteTodo = (id: string) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
@@ -164,6 +172,7 @@ export function TodoList() {
               onToggle={toggleTodo}
               onDelete={deleteTodo}
               onEdit={editTodo}
+              onSelect={selectTodo}
             />
           ))
         )}

@@ -13,9 +13,10 @@ interface TodoItemProps {
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit: (id: string, text: string) => void;
+  onSelect: (id: string) => void;
 }
 
-export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
+export function TodoItem({ todo, onToggle, onDelete, onEdit, onSelect }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
 
@@ -41,6 +42,10 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
 
   return (
     <div className="group flex items-center gap-3 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-200 animate-fade-in">
+      <Checkbox
+        checked={todo.selected || false}
+        onChange={() => onSelect(todo.id)}
+      />
       <Checkbox
         checked={todo.completed}
         onChange={() => onToggle(todo.id)}
