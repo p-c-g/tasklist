@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vipps Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 390px;
+            height: 844px;
+            background: #ffffff;
+            border-radius: 48px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: #000000;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 27px 0 27px;
+            color: #ffffff;
+        }
+
+        .status-bar .time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.442px;
+        }
+
+        .status-bar .right-icons {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .status-bar .icon {
+            width: 18px;
+            height: 12px;
+        }
+
+        .battery-icon {
+            width: 27.4px;
+            height: 13px;
+            border: 1.5px solid #fff;
+            border-radius: 3px;
+            position: relative;
+            padding: 2px;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.4px;
+            height: 4.22px;
+            background: #fff;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .battery-fill {
+            background: #fff;
+            height: 100%;
+            width: 100%;
+            border-radius: 1px;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            height: 56px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-bottom: 0.5px solid rgba(60, 60, 67, 0.29);
+        }
+
+        .nav-bar .title {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.442px;
+        }
+
+        .nav-bar .cancel-btn {
+            position: absolute;
+            right: 16px;
+            color: #5e3dc2;
+            font-size: 17px;
+            letter-spacing: -0.442px;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px 32px;
+            overflow-y: auto;
+            height: calc(844px - 50px - 56px - 280px);
+        }
+
+        /* Merchant Info */
+        .merchant-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            border-top: 0.3px solid rgba(60, 60, 67, 0.29);
+            border-bottom: 0.3px solid rgba(60, 60, 67, 0.29);
+        }
+
+        .merchant-logo {
+            width: 64px;
+            height: 64px;
+            background: #fc5e58;
+            border-radius: 10px;
+            border: 0.33px solid rgba(112, 107, 139, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .merchant-logo-inner {
+            width: 44px;
+            height: 44px;
+            background: url('data:image/svg+xml,<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 3L27 13L38 14L30 22L32 33L22 28L12 33L14 22L6 14L17 13L22 3Z" fill="white"/></svg>') center/contain no-repeat;
+        }
+
+        .merchant-details {
+            flex: 1;
+        }
+
+        .merchant-name {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: -0.45px;
+            margin-bottom: 3px;
+        }
+
+        .merchant-company {
+            font-size: 14px;
+            color: rgba(60, 60, 67, 0.6);
+            letter-spacing: -0.15px;
+            margin-bottom: 4px;
+        }
+
+        .merchant-location {
+            font-size: 12px;
+            color: rgba(60, 60, 67, 0.6);
+        }
+
+        /* Amount Section */
+        .amount-section {
+            padding: 24px 0;
+        }
+
+        .amount-display {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 48px;
+            margin-bottom: 12px;
+        }
+
+        .amount-main {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 48px;
+            letter-spacing: 0.38px;
+        }
+
+        .amount-decimal {
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 41px;
+            letter-spacing: 0.41px;
+        }
+
+        .amount-subtitle {
+            font-size: 17px;
+            font-weight: 500;
+            text-align: center;
+            letter-spacing: -0.44px;
+            margin-bottom: 12px;
+        }
+
+        .safe-payment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .safe-payment svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .safe-payment-text {
+            font-size: 12px;
+        }
+
+        .info-box {
+            background: rgba(255, 144, 107, 0.1);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 16px;
+            margin-bottom: 12px;
+        }
+
+        /* Specs Table */
+        .specs-table {
+            padding-bottom: 12px;
+        }
+
+        .specs-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(60, 60, 67, 0.6);
+            padding: 8px 0 4px 0;
+        }
+
+        .specs-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 4px 0;
+            letter-spacing: -0.15px;
+        }
+
+        .specs-row .number {
+            width: 22px;
+        }
+
+        .specs-row .product {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .specs-row .price {
+            text-align: right;
+            width: 110px;
+        }
+
+        .specs-total {
+            display: flex;
+            justify-content: flex-end;
+            border-top: 0.3px solid rgba(60, 60, 67, 0.29);
+            padding: 8px 0;
+            margin-top: 4px;
+        }
+
+        .specs-total .total-amount {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.15px;
+        }
+
+        /* Bottom Drawer */
+        .bottom-drawer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(44, 44, 46, 0.95);
+            backdrop-filter: blur(25px);
+            border-radius: 32px 32px 0 0;
+            box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+            padding: 32px 24px 16px 24px;
+        }
+
+        .payment-method {
+            background: #1c1c1e;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 1px;
+        }
+
+        .payment-card {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 16px;
+            min-height: 60px;
+            border-bottom: 0.333px solid rgba(84, 84, 86, 0.34);
+        }
+
+        .card-image {
+            width: 56px;
+            height: 35px;
+            background: #14555a;
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .mc-logo {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 12px;
+            height: 8px;
+        }
+
+        .card-details {
+            flex: 1;
+        }
+
+        .card-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: -0.32px;
+            line-height: 22px;
+        }
+
+        .card-number {
+            font-size: 15px;
+            color: rgba(235, 235, 245, 0.6);
+            letter-spacing: -0.23px;
+            line-height: 20px;
+        }
+
+        .other-cards {
+            background: #1c1c1e;
+            border-radius: 0 0 10px 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0 16px;
+            min-height: 60px;
+        }
+
+        .cards-stack {
+            width: 56px;
+            height: 30px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .card-mini {
+            width: 40px;
+            height: 26px;
+            border-radius: 2.64px;
+            position: absolute;
+        }
+
+        .card-mini:nth-child(1) {
+            background: #414141;
+            transform: rotate(-15deg);
+            left: -1px;
+            top: -1px;
+        }
+
+        .card-mini:nth-child(2) {
+            background: #e8e8e8;
+            transform: rotate(15deg);
+            left: 8px;
+            top: -1px;
+        }
+
+        .card-mini:nth-child(3) {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+            left: 13px;
+            top: 7px;
+        }
+
+        .other-cards-content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .other-cards-text {
+            font-size: 14px;
+            color: #ffffff;
+            letter-spacing: -0.32px;
+        }
+
+        .chevron {
+            font-size: 16px;
+            color: rgba(235, 235, 245, 0.3);
+            padding-right: 16px;
+        }
+
+        /* Pay Button */
+        .action-section {
+            padding: 16px 0 48px 0;
+        }
+
+        .pay-button {
+            background: #fe6225;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            padding: 13px 32px;
+            border-radius: 24px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0px 1px 2px 0px rgba(22, 18, 37, 0.07);
+            letter-spacing: -0.45px;
+        }
+
+        .pay-button:active {
+            opacity: 0.8;
+        }
+
+        .home-indicator {
+            width: 134px;
+            height: 5px;
+            background: #ffffff;
+            border-radius: 100px;
+            margin: 8px auto 0;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-2px);
+            }
+        }
+
+        @keyframes cardRotate1 {
+            0%, 100% {
+                transform: rotate(-15deg) translateY(0px);
+            }
+            50% {
+                transform: rotate(-17deg) translateY(-1px);
+            }
+        }
+
+        @keyframes cardRotate2 {
+            0%, 100% {
+                transform: rotate(15deg) translateY(0px);
+            }
+            50% {
+                transform: rotate(17deg) translateY(-1px);
+            }
+        }
+
+        @keyframes cardRotate3 {
+            0%, 100% {
+                transform: rotate(30deg) translateY(0px);
+            }
+            50% {
+                transform: rotate(32deg) translateY(-1px);
+            }
+        }
+
+        .bottom-drawer {
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .payment-card {
+            transition: transform 0.2s ease;
+        }
+
+        .payment-card:hover {
+            transform: scale(1.01);
+        }
+
+        .card-image {
+            animation: cardFloat 3s ease-in-out infinite;
+        }
+
+        .cards-stack {
+            cursor: pointer;
+        }
+
+        .card-mini:nth-child(1) {
+            animation: cardRotate1 4s ease-in-out infinite;
+        }
+
+        .card-mini:nth-child(2) {
+            animation: cardRotate2 3.5s ease-in-out infinite;
+            animation-delay: 0.2s;
+        }
+
+        .card-mini:nth-child(3) {
+            animation: cardRotate3 3s ease-in-out infinite;
+            animation-delay: 0.4s;
+        }
+
+        .other-cards {
+            transition: transform 0.2s ease;
+        }
+
+        .other-cards:hover {
+            transform: scale(1.01);
+            cursor: pointer;
+        }
+
+        .pay-button {
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        .pay-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0px 3px 6px 0px rgba(22, 18, 37, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="time">17:24</div>
+            <div class="right-icons">
+                <svg class="icon" viewBox="0 0 18 12" fill="none">
+                    <path d="M0.5 4.5C0.5 2.5 2 1 4 1C4.5 1 5 1.1 5.5 1.3L12.5 4.3C13 4.5 13.5 4.5 14 4.5C16 4.5 17.5 6 17.5 8C17.5 10 16 11.5 14 11.5C13.5 11.5 13 11.4 12.5 11.2L5.5 8.2C5 8 4.5 8 4 8C2 8 0.5 6.5 0.5 4.5Z" fill="white"/>
+                </svg>
+                <svg class="icon" viewBox="0 0 17 12" fill="none">
+                    <path d="M15.5 1C16.3 1 17 1.7 17 2.5V9.5C17 10.3 16.3 11 15.5 11C14.7 11 14 10.3 14 9.5V2.5C14 1.7 14.7 1 15.5 1ZM11.5 2C12.3 2 13 2.7 13 3.5V8.5C13 9.3 12.3 10 11.5 10C10.7 10 10 9.3 10 8.5V3.5C10 2.7 10.7 2 11.5 2ZM7.5 3C8.3 3 9 3.7 9 4.5V7.5C9 8.3 8.3 9 7.5 9C6.7 9 6 8.3 6 7.5V4.5C6 3.7 6.7 3 7.5 3ZM3.5 4C4.3 4 5 4.7 5 5.5V6.5C5 7.3 4.3 8 3.5 8C2.7 8 2 7.3 2 6.5V5.5C2 4.7 2.7 4 3.5 4Z" fill="white"/>
+                </svg>
+                <div class="battery-icon">
+                    <div class="battery-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <div class="title">Pay</div>
+            <div class="cancel-btn">Cancel</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Merchant Info -->
+            <div class="merchant-info">
+                <div class="merchant-logo">
+                    <div class="merchant-logo-inner"></div>
+                </div>
+                <div class="merchant-details">
+                    <div class="merchant-name">Strawberry</div>
+                    <div class="merchant-company">Strawberry AS</div>
+                    <div class="merchant-location">0495 Oslo, Norway</div>
+                </div>
+            </div>
+
+            <!-- Amount Section -->
+            <div class="amount-section">
+                <div class="amount-display">
+                    <span class="amount-main">2338</span>
+                    <span class="amount-decimal">,00 kr</span>
+                </div>
+                <div class="amount-subtitle">Your hotel stay in Oslo</div>
+                <div class="safe-payment">
+                    <svg viewBox="0 0 11 11" fill="none">
+                        <path d="M5.5 0.5L8.5 1L9 4L8.5 7L5.5 7.5L2.5 7L2 4L2.5 1L5.5 0.5Z" fill="black"/>
+                        <circle cx="5.5" cy="4.5" r="1" fill="white"/>
+                        <rect x="5" y="5.5" width="1" height="1.5" fill="white"/>
+                    </svg>
+                    <span class="safe-payment-text">A safe payment with Vipps</span>
+                </div>
+                <div class="info-box">
+                    Vipps doesn't charge any fees when you pay to businesses. Regardless of the amount.
+                </div>
+            </div>
+
+            <!-- Specs Table -->
+            <div class="specs-table">
+                <div class="specs-header">
+                    <span style="width: 22px;">#</span>
+                    <span style="flex: 1; padding: 0 10px;">Product</span>
+                    <span style="text-align: right; width: 110px;">Total</span>
+                </div>
+                <div class="specs-row">
+                    <span class="number">1</span>
+                    <span class="product">Twin room</span>
+                    <span class="price">2300,00 kr</span>
+                </div>
+                <div class="specs-row">
+                    <span class="number">1</span>
+                    <span class="product">Bottle of water</span>
+                    <span class="price">38,00 kr</span>
+                </div>
+                <div class="specs-total">
+                    <span class="total-amount">2338,00 kr</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Drawer -->
+        <div class="bottom-drawer">
+            <div class="payment-method">
+                <div class="payment-card">
+                    <div class="card-image">
+                        <div class="mc-logo">
+                            <svg viewBox="0 0 12 8" fill="none">
+                                <circle cx="3.5" cy="4" r="3.5" fill="#EB001B"/>
+                                <circle cx="8.5" cy="4" r="3.5" fill="#F79E1B"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-name">Pluss spendings</div>
+                        <div class="card-number">•••• 1234</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="other-cards">
+                <div class="cards-stack">
+                    <div class="card-mini"></div>
+                    <div class="card-mini"></div>
+                    <div class="card-mini"></div>
+                </div>
+                <div class="other-cards-content">
+                    <div class="other-cards-text">Other cards and pay later</div>
+                    <div class="chevron">›</div>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <button class="pay-button">Pay</button>
+                <div class="home-indicator"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
