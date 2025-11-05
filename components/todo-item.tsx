@@ -44,7 +44,6 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
       <Checkbox
         checked={todo.completed}
         onChange={() => onToggle(todo.id)}
-        id={`todo-${todo.id}`}
       />
       
       {isEditing ? (
@@ -75,17 +74,16 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
         </div>
       ) : (
         <>
-          <label
-            htmlFor={`todo-${todo.id}`}
+          <span
             className={cn(
-              "flex-1 cursor-pointer select-none text-sm transition-all",
+              "flex-1 select-none text-sm transition-all",
               todo.completed
                 ? "line-through text-muted-foreground"
                 : "text-foreground"
             )}
           >
             {todo.text}
-          </label>
+          </span>
           
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button
